@@ -56,15 +56,29 @@ dropDownMenu.on('click', '.dropdown-item', function(){
 
 // generate event placeholders -----------------------------------------------------------------------------------------------
 
-let placeholderGroup = $('<div class="input-group mb-3 justify-content-center">');
-for(let i = 0; i < timesArray.length; i++){
-    let placeholderItem = $('<span class="input-group-text col-8" id="inputGroup-sizing-default">')
-        .addClass('item' + i)
-        .text(timesArray[i]);
-    placeholderGroup.append(placeholderItem);
-}
+function genPlaceholders(){
+    let placeholderGroup = $('<div class="input-group mb-3 justify-content-center">')
+        .addClass('placeholderContainer');
+    for(let i = 0; i < timesArray.length; i++){
+        let placeholderItem = $('<span class="input-group-text col-8" id="inputGroup-sizing-default">')
+            .addClass('item' + i)
+            .text(timesArray[i]);
+        placeholderGroup.append(placeholderItem);
+    }
+    let clearAllButton = $('<button type="button" class="btn btn-primary col-5 m-5">')
+        .addClass('clearAllBtn')
+        .text('Clear All');
+    placeholderGroup.append(clearAllButton);
 
-listContainer.append(placeholderGroup);
+    listContainer.append(placeholderGroup);
+
+    $('.clearAllBtn').on('click', function(){
+        console.log('hey');
+        $('.placeholderContainer').empty();
+        genPlaceholders();
+    })
+}
+genPlaceholders();
 
 
 // functions --------------------------------------------------------------------------------------------------------------------
@@ -93,18 +107,11 @@ function appendEventItem(){
         if(timesArray[i] === timeDropdown.text()){
             $(`.item${i}`)
                 .addClass('bg-light')
-                .text(timesArray[i] + ' ' + addInput.val())
-                .append('<button type="button" class="btn btn-dark btn-sm m-2">X</button>');
+                .text(timesArray[i] + ' - ' + addInput.val())
             return;
         }
     }
 }
-
-$('').on('click', function(){
-    console.log('d');
-    console.log($(this));
-    $(this).parent().hide();
-})
 
 // to append list item
 addButton.on('click', function(){
