@@ -73,7 +73,7 @@ function genPlaceholders(){
     listContainer.append(placeholderGroup);
 
     $('.clearAllBtn').on('click', function(){
-        console.log('hey');
+        localStorage.clear();
         $('.placeholderContainer').empty();
         genPlaceholders();
     })
@@ -85,20 +85,38 @@ genPlaceholders();
 
 // append items from local storage to placeholders
 function appendFromLocal(){
+    if(localStorage.getItem("savedEvents") === null){
+        return;
+    }else{
+        let localSavedEvents = JSON.parse(localStorage.getItem("savedEvents") || "[]");
 
+        for(let j = 0; j < localSavedEvents.length; j++){
+            for(let i = 0; i < timesArray.length; i++){
+                if(timesArray[i] === localSavedEvents[j].time){
+                    $(`.item${i}`)
+                        .addClass('bg-light')
+                        .text(timesArray[i] + ' - ' + localSavedEvents[j].event)
+                }
+            }
+        }
+        return;
+    }
 }
+appendFromLocal();
 
 // save user input to local storage
+let savedEvents = [];
 function saveEvent(){
     // Save related form data as an object
-  let itemInput = {
-    time: timeDropdown.textContent,
-    event: addInput.value
-  };
+  let savedItem = {
+    time: timeDropdown.text(),
+    event: addInput.val()
+  }
+
+  savedEvents.push(savedItem);
+
   // Use .setItem() to store object in storage and JSON.stringify to convert it as a string
-  localStorage.setItem("itemInput", JSON.stringify(itemInput));
-  console.log('80');
-  console.log(JSON.parse(localStorage.getItem("itemInput")));
+  localStorage.setItem("savedEvents", JSON.stringify(savedEvents));
 }
 
 // append items to placeholders
@@ -117,4 +135,5 @@ function appendEventItem(){
 addButton.on('click', function(){
     // saveEvent();
     appendEventItem();
+    saveEvent();
 });
